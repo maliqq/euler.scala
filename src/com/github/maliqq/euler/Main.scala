@@ -5,7 +5,7 @@ import scala.reflect.runtime.{ currentMirror => cm }
 
 object Main {
   def main(args: Array[String]) {
-    val n = 11
+    val n = 13
     
     val solutions = cm.reflect(Problems).symbol.typeSignature.declarations.filter(_.isModule)
     val solution = solutions.find { decl =>

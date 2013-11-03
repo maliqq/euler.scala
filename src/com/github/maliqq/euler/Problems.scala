@@ -2,6 +2,28 @@ package com.github.maliqq.euler
 
 case class Problem(number: Int) extends scala.annotation.StaticAnnotation
 
+object Prime {
+  def isPrime(n: Int, m: Int): Boolean = m match {
+    case 1 => true
+    case _ => if (n % m == 0) false else isPrime(n, m - 1)
+  }
+  
+  def isPrime(n: Int): Boolean = n match {
+    case 1 => false
+    case 2 | 3 => true
+    case _ => isPrime(n, Math.sqrt(n.toDouble).toInt)
+  }
+  
+  def factors(n: Int, m: Int, c: Int): List[Tuple2[Int, Int]] = isPrime(m) match {
+    case true if n == m => List((m, c + 1))
+    case true if n % m == 0 => factors(n / m, m, c + 1)
+    case true if c > 0 => (m, c) :: factors(n, m + 1, 0)
+    case _ => factors(n, m + 1, 0)
+  }
+  
+  def factors(n: Int): List[Tuple2[Int, Int]] = factors(n, 2, 0)
+}
+
 object Problems {
   @Problem(11)
   object Problem11 extends Runnable {
@@ -51,6 +73,40 @@ object Problems {
           if (a.isEmpty) -1 else a.max
         }.max
       )
+    }
+  }
+  
+  @Problem(12)
+  object Problem12 extends Runnable {
+    def divisors(n: Int): Int = n match {
+      case 1 => 1
+      case _ => Prime.factors(n).map(_._2 + 1).product
+    }
+    
+    def run {
+      var n = 0
+      var i = 1
+      var number = 0
+      while (n < 500) {
+        number += i
+        n = divisors(number)
+        i += 1
+      }
+      Console printf("%d", number)
+    }
+  }
+  
+  @Problem(13)
+  object Problem13 extends Runnable {
+    def run {
+      val r = new java.io.BufferedReader(new java.io.FileReader("resources/13.txt"))
+      var line = r.readLine
+      var sum: BigInt = 0
+      while (line != null) {
+        sum += BigInt(line)
+        line = r.readLine
+      }
+      Console printf("%s", sum.toString.slice(0, 10))
     }
   }
 }
